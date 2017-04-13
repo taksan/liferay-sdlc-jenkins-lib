@@ -16,3 +16,7 @@ def log(args) {
 def getWorkspace() {
     return workspace
 }
+
+def getLibraryResource(resource) {
+    libraryResource resource;
+}

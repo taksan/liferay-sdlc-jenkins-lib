@@ -14,25 +14,24 @@ def log(args) {
     println args
 }
 
-@NonCPS
 def loadLibrary(resource) {
    def contents = libraryResource resource;
    return contents
 }
 
-@NonCPS
 def _readFile(fileName) {
     sh 'pwd'
     return readFile(fileName)
 }
 
-@NonCPS
 def _fileExists(fileName) {
     log "checking file exists $fileName "
-    return fileExists(fileName);
+    r = fileExists(fileName);
+
+    log "file exists result: $r $fileName "
+    return r
 }
 
-@NonCPS
 def _writeFile(fileName, contents) {
     writeFile file: fileName, text: contents
 }

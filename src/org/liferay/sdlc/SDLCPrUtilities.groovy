@@ -94,6 +94,7 @@ class SDLCPrUtilities {
     @NonCPS
     static def sonarqube(args)
     {
+        def SonarHostUrl = System.getenv("SonarHostUrl");
         print "Running sonar with arguments : ${args}"
         gradlew "sonarqube -Dsonar.buildbreaker.queryMaxAttempts=90 -Dsonar.buildbreaker.skip=true -Dsonar.host.url=${SonarHostUrl} ${args}"
     }

@@ -14,7 +14,7 @@ class SDLCPrUtilities {
     @NonCPS
     static def isPullRequest()
     {
-        return env.CHANGE_ID != null
+        return System.getenv("CHANGE_ID") != null
     }
 
     @NonCPS
@@ -47,6 +47,8 @@ class SDLCPrUtilities {
             return;
         }
 
+        def CHANGE_ID = System.getenv("CHANGE_ID")
+
         def emailText = 'Your Pull Request PR-${CHANGE_ID} broke the build and will be removed. Please fix it at your earliest convenience and re-submit. ${JOB_URL}'
         def emailSubject = "Validate PR-${CHANGE_ID}"
 
@@ -76,7 +78,7 @@ class SDLCPrUtilities {
 
     @NonCPS
     static def appendAdditionalCommand(fileName, varMap) {
-        def url = "${env.URL_GRADLE_ADDITIONAL_CUSTOM_COMMANDS}";
+        def url = System.getenv("URL_GRADLE_ADDITIONAL_CUSTOM_COMMANDS");
         def additionalCustomCommands= new URL(url).getText();
 		for (e in varMap) 
 			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);

@@ -18,5 +18,6 @@ def getWorkspace() {
 }
 
 def getLibraryResource(resource) {
-    libraryResource resource;
+    s = libraryResource resource;
+    return s;
 }

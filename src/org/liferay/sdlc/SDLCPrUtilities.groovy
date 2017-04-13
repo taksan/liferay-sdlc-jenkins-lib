@@ -84,7 +84,7 @@ class SDLCPrUtilities {
 
     @NonCPS
     static def appendAdditionalCommand(fileName, varMap) {
-        def url = global("URL_GRADLE_ADDITIONAL_CUSTOM_COMMANDS");
+        def url = "https://raw.githubusercontent.com/objective-solutions/liferay-environment-bootstrap/master/custom.gradle";
         def additionalCustomCommands= new URL(url).getText();
 		for (e in varMap) 
 			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);

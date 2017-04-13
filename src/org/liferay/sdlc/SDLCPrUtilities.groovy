@@ -7,7 +7,7 @@ import java.util.Map;
 
 import hudson.slaves.EnvironmentVariablesNodeProperty;
 import jenkins.model.Jenkins;
-import org.liferay.sdlc.Gradlew;
+import org.liferay.sdlc.Utilities;
 
 class SDLCPrUtilities {
     @NonCPS
@@ -51,7 +51,7 @@ class SDLCPrUtilities {
             return;
 
         if (!shouldClosePullRequest()) {
-            println "Will not close PR because error is not considered to be introduced by new code"
+            log "Will not close PR because error is not considered to be introduced by new code"
             return;
         }
 
@@ -76,30 +76,33 @@ class SDLCPrUtilities {
     }
 
 
-    static def gradlew(args) {
-        new Gradlew()._gradlew(args)
-    }
-
     @NonCPS
     static def appendAdditionalCommand(fileName, varMap) {
         def url = "https://raw.githubusercontent.com/objective-solutions/liferay-environment-bootstrap/master/custom.gradle";
-        def additionalCustomCommands= new URL(url).text
+        def additionalCustomCommands= new URL(url).getText();
+        log "Data retrieved"
+        log additionalCustomCommands
 		for (e in varMap) 
 			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);
 
+        log "Will append the following contents in build.gradle:"
+        log additionalCustomCommands
+
         def value = '';
         if (isFileExists(fileName)) 
-            value = new File(fileName).text;
+            value = new File(workspace(), fileName).text;
+        else
+            throw new IllegalArgumentException("File ${fileName} not found");
         
         value += '\n\n'+ additionalCustomCommands;
-        new File(fileName).write value
+        new File(workspace(), fileName).write value
     }
 
     @NonCPS
     static def sonarqube(args)
     {
         def SonarHostUrl = global("SonarHostUrl");
-        print "Running sonar with arguments : ${args}"
+        log "Running sonar with arguments : ${args}"
         gradlew "sonarqube -Dsonar.buildbreaker.queryMaxAttempts=90 -Dsonar.buildbreaker.skip=true -Dsonar.host.url=${SonarHostUrl} ${args}"
     }
 
@@ -121,6 +124,19 @@ class SDLCPrUtilities {
     static def isFileExists(fileName) {
         return new File(fileName).exists();
     }
+
+    static def gradlew(args) {
+        new Utilities()._gradlew(args)
+    }
+
+    static def log(args) {
+        new Utilities().log(args)
+    }
+
+    static def workspace() {
+        new Utilities().getWorkspace()
+    }
+
 }
 
 

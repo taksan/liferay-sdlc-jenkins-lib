@@ -9,3 +9,10 @@ def _gradlew(args)
         bat "gradlew " + args
 }
 
+def log(args) {
+    println args
+}
+
+def getWorkspace() {
+    return workspace
+}

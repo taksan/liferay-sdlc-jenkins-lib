@@ -78,9 +78,7 @@ class SDLCPrUtilities {
 
     @NonCPS
     static def appendAdditionalCommand(fileName, varMap) {
-        //def url = "https://raw.githubusercontent.com/objective-solutions/liferay-environment-bootstrap/master/custom.gradle";
-        //def additionalCustomCommands= new URL(url).getText();
-        log "appendAdditionalCommand $fileName"
+        log "appendAdditionalCommand $fileName --"
         def additionalCustomCommands = "";//new Utilities().getLibraryResource("org/liferay/sdlc/custom.gradle")
         log "Data retrieved"
         log additionalCustomCommands
@@ -99,6 +97,17 @@ class SDLCPrUtilities {
         value += '\n\n'+ additionalCustomCommands;
         new File(workspace(), fileName).write value
     }
+
+    @NonCPS
+    static def appendExtraBuildOptions(fileName, varMap) {
+        log "--appendAdditionalCommand $fileName --"
+        log "--appendAdditionalCommand $fileName --"
+        log "--appendAdditionalCommand $fileName --"
+        log "--appendAdditionalCommand $fileName --"
+        log "--appendAdditionalCommand $fileName --"
+        log varMap
+    }
+
 
     @NonCPS
     static def sonarqube(args)

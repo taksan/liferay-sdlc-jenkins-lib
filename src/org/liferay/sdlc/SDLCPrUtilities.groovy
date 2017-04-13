@@ -1,7 +1,7 @@
 #!groovy
 import groovy.json.JsonSlurper
 
-class PRBuilder {
+class SDLCPrUtilities {
     static def getLogin(String json) {
         return new JsonSlurper().parseText(json).user.login
     }
@@ -75,7 +75,12 @@ class PRBuilder {
     }
 
     @NonCPS
-    static def appendAdditionalCommand(fileName, additionalCustomCommands) {
+    static def appendAdditionalCommand(fileName, varMap) {
+        def url = "${env.URL_GRADLE_ADDITIONAL_CUSTOM_COMMANDS}";
+        def additionalCustomCommands= new URL(url).getText();
+		for (e in varMap) 
+			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);
+
         def value = '';
         if (fileExists(fileName)) {
             value = readFile(fileName);
@@ -90,4 +95,5 @@ class PRBuilder {
         print "Running sonar with arguments : ${args}"
         gradlew "sonarqube -Dsonar.buildbreaker.queryMaxAttempts=90 -Dsonar.buildbreaker.skip=true -Dsonar.host.url=${SonarHostUrl} ${args}"
     }
+
 }

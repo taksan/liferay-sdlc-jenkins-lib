@@ -15,12 +15,8 @@ def log(args) {
 }
 
 @NonCPS
-def getWorkspace() {
-    return workspace
-}
-
-@NonCPS
-def getLibraryResource(resource) {
-    return libraryResource(resource);
+def loadLibrary(resource) {
+   def contents = libraryResource resource;
+   return contents
 }
 

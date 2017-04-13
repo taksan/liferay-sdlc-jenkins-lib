@@ -78,14 +78,14 @@ class SDLCPrUtilities {
     @NonCPS
     static def appendAdditionalCommand(fileName, varMap) {
         log "appendAdditionalCommand $fileName $varMap"
-        def additionalCustomCommands = new Utilities().getLibraryResource("org/liferay/sdlc/custom.gradle")
+        def additionalCustomCommands = new Utilities().loadLibrary("org/liferay/sdlc/custom.gradle")
 
 		for (e in varMap) 
 			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);
 
         log "Contents loaded. Will append"
 
-        def file = new File(workspace(), fileName);
+        def file = new File(fileName);
         def value = '';
         log "checking file $fileName exists"
         if (!file.exists()) {
@@ -99,7 +99,7 @@ class SDLCPrUtilities {
         value += '\n\n'+ additionalCustomCommands;
         log "Contents to write"
         log value
-        new File(workspace(), fileName).write value
+        new File(fileName).write value
     }
 
 
@@ -138,11 +138,6 @@ class SDLCPrUtilities {
     @NonCPS
     static def log(args) {
         new Utilities().log(args)
-    }
-
-    @NonCPS
-    static def workspace() {
-        new Utilities().getWorkspace()
     }
 
     @NonCPS

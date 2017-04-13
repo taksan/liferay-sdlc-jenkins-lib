@@ -104,18 +104,21 @@ class SDLCPrUtilities {
         print "Running sonar with arguments : ${args}"
         gradlew "sonarqube -Dsonar.buildbreaker.queryMaxAttempts=90 -Dsonar.buildbreaker.skip=true -Dsonar.host.url=${SonarHostUrl} ${args}"
     }
+
+    @NonCPS
+    static def global(name) {
+       if (System.getenv(name) != null)
+            return System.getenv(name);
+
+       List<EnvironmentVariablesNodeProperty> all = Jenkins.instance.getGlobalNodeProperties().getAll(EnvironmentVariablesNodeProperty.class);
+        for (EnvironmentVariablesNodeProperty environmentVariablesNodeProperty : all) {
+            def value = environmentVariablesNodeProperty.getEnvVars().get(name);
+            if (value != null) 
+                return value;
+        }	
+        return null;
+    }
+
 }
 
-def global(name) {
-   if (System.getenv(name) != null)
-        return System.getenv(name);
-
-   List<EnvironmentVariablesNodeProperty> all = Jenkins.instance.getGlobalNodeProperties().getAll(EnvironmentVariablesNodeProperty.class);
-    for (EnvironmentVariablesNodeProperty environmentVariablesNodeProperty : all) {
-        value = environmentVariablesNodeProperty.getEnvVars().get(name);
-        if (value != null) 
-            return value;
-    }	
-    return null;
-}
 

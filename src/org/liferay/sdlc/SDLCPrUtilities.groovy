@@ -8,6 +8,7 @@ import hudson.slaves.EnvironmentVariablesNodeProperty;
 import jenkins.model.Jenkins;
 
 class SDLCPrUtilities {
+    @NonCPS
     static def getLogin(String json) {
         return new JsonSlurper().parseText(json).user.login
     }
@@ -26,11 +27,10 @@ class SDLCPrUtilities {
     @NonCPS
     static def shouldClosePullRequest()
     {
-        File failureReasonFile = new File("failureReasonFile");
-        if (!failureReasonFile.exists())
+        if (!isFileExists("failureReasonFile"))
             return false;
         
-        def reasonText = failureReasonFile.text.trim();
+        def reasonText = new File("failureReasonFile").text.trim();
         if (reasonText.matches(".*Task: compileJava.*org.gradle.api.internal.tasks.compile.CompilationFailedException.*"))
             return true;
 
@@ -76,10 +76,10 @@ class SDLCPrUtilities {
     @NonCPS
     static def gradlew(args)
     {
-        if (isUnix())
-            sh "./gradlew " + args
+        if (System.getProperty("os.name").startsWith("Windows"))
+            ("cmd /c gradlew " + args).execute();
         else
-            bat "gradlew " + args
+            ("./gradlew " + args).execute();
     }
 
     @NonCPS
@@ -90,9 +90,9 @@ class SDLCPrUtilities {
 			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);
 
         def value = '';
-        if (fileExists(fileName)) {
+        if (isFileExists(fileName)) 
             value = readFile(fileName);
-        }
+        
         value += '\n\n'+ additionalCustomCommands;
         writeFile file: fileName, text: value
     }
@@ -119,6 +119,10 @@ class SDLCPrUtilities {
         return null;
     }
 
+    @NonCPS
+    static def isFileExists(fileName) {
+        return new File(fileName).exists();
+    }
 }
 
 

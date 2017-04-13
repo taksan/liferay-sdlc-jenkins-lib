@@ -82,11 +82,11 @@ class SDLCPrUtilities {
 		for (e in varMap) 
 			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);
 
-        log "Will append the following contents in build.gradle:"
-        log additionalCustomCommands
+        log "Contents loaded. Will append"
 
         def file = new File(workspace(), fileName);
         def value = '';
+        log "checking file $fileName exists"
         if (!file.exists()) {
             log "file $fileName not found"
             return;

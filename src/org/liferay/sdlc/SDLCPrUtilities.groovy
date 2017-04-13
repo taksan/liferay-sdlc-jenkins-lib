@@ -10,6 +10,8 @@ import jenkins.model.Jenkins;
 import org.liferay.sdlc.Utilities;
 
 class SDLCPrUtilities {
+    static def _ = new Utilities();
+
     @NonCPS
     static def getLogin(String json) {
         return new JsonSlurper().parseText(json).user.login
@@ -76,21 +78,25 @@ class SDLCPrUtilities {
     }
 
     @NonCPS
-    static def appendAdditionalCommand(file, varMap) {
-        def additionalCustomCommands = new Utilities().loadLibrary("org/liferay/sdlc/custom.gradle")
+    static def appendAdditionalCommand(fileName, varMap) {
+        log "### Appending to $fileName"
+        def additionalCustomCommands = _.loadLibrary("org/liferay/sdlc/custom.gradle")
 
+        log "### addiditional contents loaded $additionalCustomCommands"
 		for (e in varMap) 
 			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);
 
-        if (!file.exists()) {
-            log "file $file.name not found"
+        log "### addiditional contents loaded $additionalCustomCommands and replaced"
+        if (!_._fileExists(fileName)) {
+            log "file $fileName not found"
             return;
         }    
 
-        file << '\n\n'+ additionalCustomCommands;
-        log "CONTENTS"
-        log file.text
-        log file.absolutePath
+        log "file $fileName FOUND"
+        def contents = _._readFile(fileName);
+        contents += '\n\n'+ additionalCustomCommands;
+           
+        _._writeFile(fileName, contents);
     }
 
 
@@ -123,19 +129,14 @@ class SDLCPrUtilities {
 
     @NonCPS
     static def gradlew(args) {
-        new Utilities()._gradlew(args)
+        _._gradlew(args)
     }
 
     @NonCPS
     static def log(args) {
-        new Utilities().log(args)
+        _.log(args)
     }
 
-    @NonCPS
-    static def getLibraryResource(n) {
-        log "Loading library resource $n"
-        return new Utilities().getLibraryResource(n);
-    }
 }
 
 

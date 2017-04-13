@@ -20,3 +20,19 @@ def loadLibrary(resource) {
    return contents
 }
 
+@NonCPS
+def _readFile(fileName) {
+    sh 'pwd'
+    return readFile(fileName)
+}
+
+@NonCPS
+def _fileExists(fileName) {
+    log "checking file exists $fileName "
+    return fileExists(fileName);
+}
+
+@NonCPS
+def _writeFile(fileName, contents) {
+    writeFile file: fileName, text: contents
+}

@@ -93,10 +93,10 @@ class SDLCPrUtilities {
         log "Contents to write : "
         log additionalCustomCommands
         log "--------------------"
-        new File(fileName) << '\n\n'+ additionalCustomCommands;
+        new File(workspaceDir(), fileName) << '\n\n'+ additionalCustomCommands;
 
         log "File $fileName written: contents"
-        log new File(fileName).absolutePath
+        log new File(workspaceDir(), fileName).absolutePath
     }
 
 
@@ -141,6 +141,11 @@ class SDLCPrUtilities {
     static def getLibraryResource(n) {
         log "Loading library resource $n"
         return new Utilities().getLibraryResource(n);
+    }
+
+    @NonCPS
+    static def workspaceDir() {
+        return new Utilities().workspaceDir();
     }
 }
 

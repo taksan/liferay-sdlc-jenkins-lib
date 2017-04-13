@@ -20,3 +20,7 @@ def loadLibrary(resource) {
    return contents
 }
 
+@NonCPS
+def workspaceDir() {
+    return workspace
+}

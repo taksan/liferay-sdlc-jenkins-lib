@@ -107,7 +107,7 @@ class SDLCPrUtilities {
             args="-Dsonar.analysis.mode=preview -Dsonar.github.pullRequest=${_.CHANGE_ID()} -Dsonar.github.oauth=${_.GithubOauth()} -Dsonar.github.repository=${gitRepository}"
         }
         else {
-            args="-Dsonar.analysis.mode=preview"
+            args=""
         }    
         gradlew "sonarqube -Dsonar.buildbreaker.queryMaxAttempts=90 -Dsonar.buildbreaker.skip=true -Dsonar.host.url=${_.SonarHostUrl()} ${args}"
     }

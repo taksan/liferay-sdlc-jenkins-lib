@@ -9,17 +9,18 @@ def _gradlew(args)
         bat "gradlew " + args
 }
 
+@NonCPS
 def log(args) {
     println args
 }
 
+@NonCPS
 def getWorkspace() {
     return workspace
 }
 
+@NonCPS
 def getLibraryResource(resource) {
-    println "loading resource $resource"
-    s = libraryResource resource;
-    println "Resource $resource loaded:"
-    return s;
+    return libraryResource(resource);
 }
+

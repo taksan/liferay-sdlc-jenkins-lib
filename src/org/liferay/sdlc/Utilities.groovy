@@ -49,3 +49,8 @@ def SonarHostUrl() {
 def ChangeId() {
     return env.CHANGE_ID;
 }
+
+@NonCPS
+def GithubOauth() {
+    return env.GithubOauth;
+}

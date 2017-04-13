@@ -97,16 +97,17 @@ class SDLCPrUtilities {
 
 
     @NonCPS
-    static def sonarqube()
+    static def sonarqube(gitRepository)
     {
         if (!_.isSonarVerificationEnabled()) {
             log "Sonar verification is disabled."
             return;
         }
 
+        def args=""
         if (isPullRequest()) {
             println "Sonarqube Pull Request Evaluation"
-            args="-Dsonar.analysis.mode=preview -Dsonar.github.pullRequest=${CHANGE_ID} -Dsonar.github.oauth=${GithubOauth} -Dsonar.github.repository=${gitRepository}"
+            args="-Dsonar.analysis.mode=preview -Dsonar.github.pullRequest=${_.CHANGE_ID()} -Dsonar.github.oauth=${_.GithubOauth()} -Dsonar.github.repository=${gitRepository}"
         }
         else {
             args="-Dsonar.analysis.mode=preview"

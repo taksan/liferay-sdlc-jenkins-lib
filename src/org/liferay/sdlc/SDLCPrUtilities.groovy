@@ -85,17 +85,16 @@ class SDLCPrUtilities {
         log "Will append the following contents in build.gradle:"
         log additionalCustomCommands
 
+        def file = new File(workspace(), fileName);
         def value = '';
-        if (isFileExists(fileName)) {
-            log "file found"
-            
-            value = new File(workspace(), fileName).text;
-         }
-        else {
-            log "file NOT found"
-            throw new IllegalArgumentException("File ${fileName} not found");
+        if (!file.exists()) {
+            log "file $fileName not found"
+            return;
         }    
-        
+        log "file $fileName found"
+        value = file.text;
+        log "file contents loaded"
+        log value
         value += '\n\n'+ additionalCustomCommands;
         log "Contents to write"
         log value

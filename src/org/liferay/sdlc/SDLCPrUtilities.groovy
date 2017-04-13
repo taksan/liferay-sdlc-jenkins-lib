@@ -75,12 +75,10 @@ class SDLCPrUtilities {
         emailext body: "${emailText}", subject: "${emailSubject}", to: "${emailLeader}"
     }
 
-
-    @NonCPS
     static def appendAdditionalCommand(fileName, varMap) {
+        log "appendAdditionalCommand $fileName $varMap"
         def additionalCustomCommands = new Utilities().getLibraryResource("org/liferay/sdlc/custom.gradle")
-        log "Data retrieved"
-        log additionalCustomCommands
+
 		for (e in varMap) 
 			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);
 
@@ -94,14 +92,9 @@ class SDLCPrUtilities {
             throw new IllegalArgumentException("File ${fileName} not found");
         
         value += '\n\n'+ additionalCustomCommands;
+        log "Contents to write"
+        log value
         new File(workspace(), fileName).write value
-    }
-
-    static def appendExtraBuildOptions(fileName, varMap) {
-        def x="foo"
-        log "oooo #### --appendAdditionalCommand $fileName ${varMap} $x-- additional commands below"
-        def additionalCustomCommands = new Utilities().getLibraryResource("org/liferay/sdlc/custom.gradle")
-        log additionalCustomCommands
     }
 
 

@@ -89,13 +89,14 @@ class SDLCPrUtilities {
             log "file $fileName not found"
             return;
         }    
-        value = file.text;
-        value += '\n\n'+ additionalCustomCommands;
+
         log "Contents to write : "
-        log value
+        log additionalCustomCommands
         log "--------------------"
-        new File(fileName).write value
-        log "File $fileName written"
+        new File(fileName) << '\n\n'+ additionalCustomCommands;
+
+        log "File $fileName written: contents"
+        log new File(fileName).absolutePath
     }
 
 

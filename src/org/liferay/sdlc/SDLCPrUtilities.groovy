@@ -78,8 +78,7 @@ class SDLCPrUtilities {
 
     @NonCPS
     static def appendAdditionalCommand(fileName, varMap) {
-        log "appendAdditionalCommand $fileName --"
-        def additionalCustomCommands = "";//new Utilities().getLibraryResource("org/liferay/sdlc/custom.gradle")
+        def additionalCustomCommands = new Utilities().getLibraryResource("org/liferay/sdlc/custom.gradle")
         log "Data retrieved"
         log additionalCustomCommands
 		for (e in varMap) 
@@ -98,14 +97,11 @@ class SDLCPrUtilities {
         new File(workspace(), fileName).write value
     }
 
-    @NonCPS
     static def appendExtraBuildOptions(fileName, varMap) {
-        log "--appendAdditionalCommand $fileName --"
-        log "--appendAdditionalCommand $fileName --"
-        log "--appendAdditionalCommand $fileName --"
-        log "--appendAdditionalCommand $fileName --"
-        log "--appendAdditionalCommand $fileName --"
-        log varMap
+        def x="foo"
+        log "oooo #### --appendAdditionalCommand $fileName ${varMap} $x-- additional commands below"
+        def additionalCustomCommands = new Utilities().getLibraryResource("org/liferay/sdlc/custom.gradle")
+        log additionalCustomCommands
     }
 
 

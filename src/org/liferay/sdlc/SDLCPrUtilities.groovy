@@ -81,7 +81,7 @@ class SDLCPrUtilities {
         //def url = "https://raw.githubusercontent.com/objective-solutions/liferay-environment-bootstrap/master/custom.gradle";
         //def additionalCustomCommands= new URL(url).getText();
         log "appendAdditionalCommand $fileName"
-        def additionalCustomCommands = getLibraryResource("org/liferay/sdlc/custom.gradle")
+        def additionalCustomCommands = "";//new Utilities().getLibraryResource("org/liferay/sdlc/custom.gradle")
         log "Data retrieved"
         log additionalCustomCommands
 		for (e in varMap) 
@@ -127,19 +127,24 @@ class SDLCPrUtilities {
         return new File(fileName).exists();
     }
 
+    @NonCPS
     static def gradlew(args) {
         new Utilities()._gradlew(args)
     }
 
+    @NonCPS
     static def log(args) {
         new Utilities().log(args)
     }
 
+    @NonCPS
     static def workspace() {
         new Utilities().getWorkspace()
     }
 
+    @NonCPS
     static def getLibraryResource(n) {
+        log "Loading library resource $n"
         return new Utilities().getLibraryResource(n);
     }
 }

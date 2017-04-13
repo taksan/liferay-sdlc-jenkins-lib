@@ -19,8 +19,8 @@ def getWorkspace() {
 
 def getLibraryResource(resource) {
     println "loading resource $resource"
-    s = libraryResource resource;
+//    s = libraryResource resource;
     println "resource $resource loaded:"
-    println s
+//  println s
     return s;
 }

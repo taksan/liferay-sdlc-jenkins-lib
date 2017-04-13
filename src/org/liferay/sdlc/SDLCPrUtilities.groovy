@@ -88,6 +88,9 @@ class SDLCPrUtilities {
         }    
 
         file << '\n\n'+ additionalCustomCommands;
+        log "CONTENTS"
+        log file.text
+        log file.absolutePath
     }
 
 

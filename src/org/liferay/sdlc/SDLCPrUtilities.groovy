@@ -34,7 +34,7 @@ class SDLCPrUtilities {
         if (!isFileExists("failureReasonFile"))
             return false;
         
-        def reasonText = new File("failureReasonFile").text.trim();
+        def reasonText = _._readFile("failureReasonFile").trim();
         if (reasonText.matches(".*Task: compileJava.*org.gradle.api.internal.tasks.compile.CompilationFailedException.*"))
             return true;
 
@@ -96,7 +96,6 @@ class SDLCPrUtilities {
     }
 
 
-    @NonCPS
     static def sonarqube(gitRepository)
     {
         if (!_.isSonarVerificationEnabled()) {
@@ -120,7 +119,7 @@ class SDLCPrUtilities {
         return new File(fileName).exists();
     }
 
-    @NonCPS
+
     static def gradlew(args) {
         _._gradlew(args)
     }

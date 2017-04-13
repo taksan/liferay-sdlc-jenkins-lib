@@ -76,27 +76,18 @@ class SDLCPrUtilities {
     }
 
     @NonCPS
-    static def appendAdditionalCommand(fileName, varMap) {
-        log "appendAdditionalCommand $fileName $varMap"
+    static def appendAdditionalCommand(file, varMap) {
         def additionalCustomCommands = new Utilities().loadLibrary("org/liferay/sdlc/custom.gradle")
 
 		for (e in varMap) 
 			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);
 
-        def file = new File(fileName);
-        def value = '';
         if (!file.exists()) {
-            log "file $fileName not found"
+            log "file $file.name not found"
             return;
         }    
 
-        log "Contents to write : "
-        log additionalCustomCommands
-        log "--------------------"
-        new File(workspaceDir(), fileName) << '\n\n'+ additionalCustomCommands;
-
-        log "File $fileName written: contents"
-        log new File(workspaceDir(), fileName).absolutePath
+        file << '\n\n'+ additionalCustomCommands;
     }
 
 
@@ -141,11 +132,6 @@ class SDLCPrUtilities {
     static def getLibraryResource(n) {
         log "Loading library resource $n"
         return new Utilities().getLibraryResource(n);
-    }
-
-    @NonCPS
-    static def workspaceDir() {
-        return new Utilities().workspaceDir();
     }
 }
 

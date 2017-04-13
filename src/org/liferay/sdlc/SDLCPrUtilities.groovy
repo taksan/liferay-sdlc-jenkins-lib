@@ -1,4 +1,5 @@
-#!groovy
+package org.liferay.sdlc;
+
 import groovy.json.JsonSlurper
 
 import java.util.List;
@@ -6,6 +7,7 @@ import java.util.Map;
 
 import hudson.slaves.EnvironmentVariablesNodeProperty;
 import jenkins.model.Jenkins;
+import org.liferay.sdlc.Gradlew;
 
 class SDLCPrUtilities {
     @NonCPS
@@ -73,28 +75,24 @@ class SDLCPrUtilities {
         emailext body: "${emailText}", subject: "${emailSubject}", to: "${emailLeader}"
     }
 
-    @NonCPS
-    static def gradlew(args)
-    {
-        if (System.getProperty("os.name").startsWith("Windows"))
-            ("cmd /c gradlew " + args).execute();
-        else
-            ("./gradlew " + args).execute();
+
+    static def gradlew(args) {
+        new Gradlew()._gradlew(args)
     }
 
     @NonCPS
     static def appendAdditionalCommand(fileName, varMap) {
         def url = "https://raw.githubusercontent.com/objective-solutions/liferay-environment-bootstrap/master/custom.gradle";
-        def additionalCustomCommands= new URL(url).getText();
+        def additionalCustomCommands= new URL(url).text
 		for (e in varMap) 
 			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);
 
         def value = '';
         if (isFileExists(fileName)) 
-            value = readFile(fileName);
+            value = new File(fileName).text;
         
         value += '\n\n'+ additionalCustomCommands;
-        writeFile file: fileName, text: value
+        new File(fileName).write value
     }
 
     @NonCPS

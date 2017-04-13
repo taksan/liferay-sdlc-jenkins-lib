@@ -1,6 +1,12 @@
 #!groovy
 import groovy.json.JsonSlurper
 
+import java.util.List;
+import java.util.Map;
+
+import hudson.slaves.EnvironmentVariablesNodeProperty;
+import jenkins.model.Jenkins;
+
 class SDLCPrUtilities {
     static def getLogin(String json) {
         return new JsonSlurper().parseText(json).user.login
@@ -14,7 +20,7 @@ class SDLCPrUtilities {
     @NonCPS
     static def isPullRequest()
     {
-        return System.getenv("CHANGE_ID") != null
+        return global("CHANGE_ID") != null
     }
 
     @NonCPS
@@ -47,7 +53,7 @@ class SDLCPrUtilities {
             return;
         }
 
-        def CHANGE_ID = System.getenv("CHANGE_ID")
+        def CHANGE_ID = env("CHANGE_ID")
 
         def emailText = 'Your Pull Request PR-${CHANGE_ID} broke the build and will be removed. Please fix it at your earliest convenience and re-submit. ${JOB_URL}'
         def emailSubject = "Validate PR-${CHANGE_ID}"
@@ -78,7 +84,7 @@ class SDLCPrUtilities {
 
     @NonCPS
     static def appendAdditionalCommand(fileName, varMap) {
-        def url = System.getenv("URL_GRADLE_ADDITIONAL_CUSTOM_COMMANDS");
+        def url = global("URL_GRADLE_ADDITIONAL_CUSTOM_COMMANDS");
         def additionalCustomCommands= new URL(url).getText();
 		for (e in varMap) 
 			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);
@@ -94,9 +100,22 @@ class SDLCPrUtilities {
     @NonCPS
     static def sonarqube(args)
     {
-        def SonarHostUrl = System.getenv("SonarHostUrl");
+        def SonarHostUrl = global("SonarHostUrl");
         print "Running sonar with arguments : ${args}"
         gradlew "sonarqube -Dsonar.buildbreaker.queryMaxAttempts=90 -Dsonar.buildbreaker.skip=true -Dsonar.host.url=${SonarHostUrl} ${args}"
     }
-
 }
+
+def global(name) {
+   if (System.getenv(name) != null)
+        return System.getenv(name);
+
+   List<EnvironmentVariablesNodeProperty> all = Jenkins.instance.getGlobalNodeProperties().getAll(EnvironmentVariablesNodeProperty.class);
+    for (EnvironmentVariablesNodeProperty environmentVariablesNodeProperty : all) {
+        value = environmentVariablesNodeProperty.getEnvVars().get(name);
+        if (value != null) 
+            return value;
+    }	
+    return null;
+}
+

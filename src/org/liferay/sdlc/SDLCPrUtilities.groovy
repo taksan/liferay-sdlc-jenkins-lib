@@ -104,7 +104,7 @@ class SDLCPrUtilities {
         def args=""
         if (isPullRequest()) {
             println "Sonarqube Pull Request Evaluation"
-            args="-Dsonar.analysis.mode=preview -Dsonar.github.pullRequest=${_.CHANGE_ID()} -Dsonar.github.oauth=${_.GithubOauth()} -Dsonar.github.repository=${gitRepository}"
+            args="-Dsonar.analysis.mode=preview -Dsonar.github.pullRequest=${_.ChangeId()} -Dsonar.github.oauth=${_.GithubOauth()} -Dsonar.github.repository=${gitRepository}"
         }
         else {
             args=""

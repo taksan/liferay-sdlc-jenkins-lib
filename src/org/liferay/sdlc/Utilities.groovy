@@ -19,19 +19,18 @@ def loadLibrary(resource) {
    return contents
 }
 
+// Must not be NonCps
 def _readFile(fileName) {
     sh 'pwd'
     return readFile(fileName)
 }
 
+// Must not be NonCps
 def _fileExists(fileName) {
-    log "checking file exists $fileName "
-    r = fileExists(fileName);
-
-    log "file exists result: $r $fileName "
-    return r
+    return fileExists(fileName);
 }
 
+// Must not be NonCps
 def _writeFile(fileName, contents) {
     writeFile file: fileName, text: contents
 }

@@ -16,7 +16,7 @@ class SDLCPrUtilities {
     static def prInit(projectKey, projectName) {
 		def settingsGradle = _._readFile("settings.gradle")
 		if (!settingsGradle.contains("rootProject.name")) {
-			settingsGradle+="\nrootProject.name=$projectKey";
+			settingsGradle+="\nrootProject.name=\"$projectKey\"";
 			_._writeFile("settings.gradle", settingsGradle);
 		}
 
@@ -72,24 +72,7 @@ class SDLCPrUtilities {
             return;
         }
 
-        def CHANGE_ID = env("CHANGE_ID")
-
-        def emailText = 'Your Pull Request PR-${CHANGE_ID} broke the build and will be removed. Please fix it at your earliest convenience and re-submit. ${JOB_URL}'
-        def emailSubject = "Validate PR-${CHANGE_ID}"
-
-        def body = """
-        {"state": "closed"}
-        """
-        httpRequest acceptType: 'APPLICATION_JSON', authentication: "${gitAuthentication}", contentType: 'APPLICATION_JSON', httpMode: 'PATCH', requestBody: body, url: "https://api.github.com/repos/${gitRepository}/pulls/${CHANGE_ID}"            
-
-        def response = httpRequest acceptType: 'APPLICATION_JSON', authentication: "${gitAuthentication}", contentType: 'APPLICATION_JSON', httpMode: 'GET', url: "https://api.github.com/repos/${gitRepository}/pulls/${CHANGE_ID}"
-        def login = getLogin(response.content)
-
-        def respUser = httpRequest acceptType: 'APPLICATION_JSON', authentication: "${gitAuthentication}", contentType: 'APPLICATION_JSON', httpMode: 'GET', url: "https://api.github.com/users/${login}"
-        def email = getEmail(respUser.content)
-        
-        emailext body: "${emailText}", subject: "${emailSubject}", to: "${email}"
-        emailext body: "${emailText}", subject: "${emailSubject}", to: "${emailLeader}"
+        _.closePullRequest(gitRepository, emailLeader, gitAuthentication);
     }
 
     // This method can't be "NonCPS"

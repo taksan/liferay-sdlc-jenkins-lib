@@ -53,3 +53,24 @@ def ChangeId() {
 def GithubOauth() {
     return env.GithubOauth;
 }
+
+def closePullRequest(gitRepository, emailLeader, gitAuthentication) {
+    def CHANGE_ID = ChangeId();
+
+    def body = """
+    {"state": "closed"}
+    """
+    httpRequest acceptType: 'APPLICATION_JSON', authentication: "${gitAuthentication}", contentType: 'APPLICATION_JSON', httpMode: 'PATCH', requestBody: body, url: "https://api.github.com/repos/${gitRepository}/pulls/${CHANGE_ID}"            
+
+    def response = httpRequest acceptType: 'APPLICATION_JSON', authentication: "${gitAuthentication}", contentType: 'APPLICATION_JSON', httpMode: 'GET', url: "https://api.github.com/repos/${gitRepository}/pulls/${CHANGE_ID}"
+    def login = getLogin(response.content)
+
+    def respUser = httpRequest acceptType: 'APPLICATION_JSON', authentication: "${gitAuthentication}", contentType: 'APPLICATION_JSON', httpMode: 'GET', url: "https://api.github.com/users/${login}"
+    def email = getEmail(respUser.content)
+    def emailText = 'Your Pull Request PR-${CHANGE_ID} broke the build and will be removed. Please fix it at your earliest convenience and re-submit. ${JOB_URL}'
+    def emailSubject = "Validate PR-${CHANGE_ID}"
+   
+    emailext body: "${emailText}", subject: "${emailSubject}", to: "${email}"
+    emailext body: "${emailText}", subject: "${emailSubject}", to: "${emailLeader}"
+}
+

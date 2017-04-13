@@ -77,21 +77,18 @@ class SDLCPrUtilities {
         emailext body: "${emailText}", subject: "${emailSubject}", to: "${emailLeader}"
     }
 
+    // This method can't be "NonCPS"
     static def appendAdditionalCommand(fileName, varMap) {
-        log "### Appending to $fileName"
         def additionalCustomCommands = _.loadLibrary("org/liferay/sdlc/custom.gradle")
 
-        log "### addiditional contents loaded $additionalCustomCommands"
 		for (e in varMap) 
 			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);
 
-        log "### addiditional contents loaded $additionalCustomCommands and replaced"
         if (!_._fileExists(fileName)) {
             log "file $fileName not found"
             return;
         }    
 
-        log "file $fileName FOUND"
         def contents = _._readFile(fileName);
         contents += '\n\n'+ additionalCustomCommands;
            

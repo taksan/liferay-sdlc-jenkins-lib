@@ -86,10 +86,15 @@ class SDLCPrUtilities {
         log additionalCustomCommands
 
         def value = '';
-        if (isFileExists(fileName)) 
+        if (isFileExists(fileName)) {
+            log "file found"
+            
             value = new File(workspace(), fileName).text;
-        else
+         }
+        else {
+            log "file NOT found"
             throw new IllegalArgumentException("File ${fileName} not found");
+        }    
         
         value += '\n\n'+ additionalCustomCommands;
         log "Contents to write"

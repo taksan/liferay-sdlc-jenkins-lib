@@ -75,6 +75,7 @@ class SDLCPrUtilities {
         emailext body: "${emailText}", subject: "${emailSubject}", to: "${emailLeader}"
     }
 
+    @NonCPS
     static def appendAdditionalCommand(fileName, varMap) {
         log "appendAdditionalCommand $fileName $varMap"
         def additionalCustomCommands = new Utilities().getLibraryResource("org/liferay/sdlc/custom.gradle")

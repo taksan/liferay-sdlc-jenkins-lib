@@ -97,13 +97,20 @@ class SDLCPrUtilities {
 
 
     @NonCPS
-    static def sonarqube(args)
+    static def sonarqube()
     {
         if (!_.isSonarVerificationEnabled()) {
-            log "Sonar verification is disabled. Would've run with args: $args"
+            log "Sonar verification is disabled."
             return;
         }
-        log "Running sonar with arguments : ${args}"
+
+        if (isPullRequest()) {
+            println "Sonarqube Pull Request Evaluation"
+            args="-Dsonar.analysis.mode=preview -Dsonar.github.pullRequest=${CHANGE_ID} -Dsonar.github.oauth=${GithubOauth} -Dsonar.github.repository=${gitRepository}"
+        }
+        else {
+            args="-Dsonar.analysis.mode=preview"
+        }    
         gradlew "sonarqube -Dsonar.buildbreaker.queryMaxAttempts=90 -Dsonar.buildbreaker.skip=true -Dsonar.host.url=${_.SonarHostUrl()} ${args}"
     }
 

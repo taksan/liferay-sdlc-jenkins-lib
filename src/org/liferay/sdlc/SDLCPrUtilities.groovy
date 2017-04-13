@@ -25,7 +25,7 @@ class SDLCPrUtilities {
     @NonCPS
     static def isPullRequest()
     {
-        return global("CHANGE_ID") != null
+        return _.ChangeId() != null
     }
 
     @NonCPS
@@ -65,7 +65,7 @@ class SDLCPrUtilities {
         def body = """
         {"state": "closed"}
         """
-        httpRequest acceptType: 'APPLICATION_JSON', authentication: "${gitAuthentication}", contentType: 'APPLICATION_JSON', httpMode: 'PATCH', requestBody: body, url: "https://api.github.com/repos/${gitRepository}/pulls/${CHANGE_ID}"			
+        httpRequest acceptType: 'APPLICATION_JSON', authentication: "${gitAuthentication}", contentType: 'APPLICATION_JSON', httpMode: 'PATCH', requestBody: body, url: "https://api.github.com/repos/${gitRepository}/pulls/${CHANGE_ID}"            
 
         def response = httpRequest acceptType: 'APPLICATION_JSON', authentication: "${gitAuthentication}", contentType: 'APPLICATION_JSON', httpMode: 'GET', url: "https://api.github.com/repos/${gitRepository}/pulls/${CHANGE_ID}"
         def login = getLogin(response.content)
@@ -81,8 +81,8 @@ class SDLCPrUtilities {
     static def appendAdditionalCommand(fileName, varMap) {
         def additionalCustomCommands = _.loadLibrary("org/liferay/sdlc/custom.gradle")
 
-		for (e in varMap) 
-			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);
+        for (e in varMap) 
+            additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);
 
         if (!_._fileExists(fileName)) {
             log "file $fileName not found"
@@ -99,23 +99,12 @@ class SDLCPrUtilities {
     @NonCPS
     static def sonarqube(args)
     {
-        def SonarHostUrl = global("SonarHostUrl");
+        if (!_.isSonarVerificationEnabled()) {
+            log "Sonar verification is disabled. Would've run with args: $args"
+            return;
+        }
         log "Running sonar with arguments : ${args}"
-        gradlew "sonarqube -Dsonar.buildbreaker.queryMaxAttempts=90 -Dsonar.buildbreaker.skip=true -Dsonar.host.url=${SonarHostUrl} ${args}"
-    }
-
-    @NonCPS
-    static def global(name) {
-       if (System.getenv(name) != null)
-            return System.getenv(name);
-
-       List<EnvironmentVariablesNodeProperty> all = Jenkins.instance.getGlobalNodeProperties().getAll(EnvironmentVariablesNodeProperty.class);
-        for (EnvironmentVariablesNodeProperty environmentVariablesNodeProperty : all) {
-            def value = environmentVariablesNodeProperty.getEnvVars().get(name);
-            if (value != null) 
-                return value;
-        }	
-        return null;
+        gradlew "sonarqube -Dsonar.buildbreaker.queryMaxAttempts=90 -Dsonar.buildbreaker.skip=true -Dsonar.host.url=${_.SonarHostUrl()} ${args}"
     }
 
     @NonCPS

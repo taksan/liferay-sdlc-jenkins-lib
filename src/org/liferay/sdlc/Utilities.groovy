@@ -34,3 +34,19 @@ def _fileExists(fileName) {
 def _writeFile(fileName, contents) {
     writeFile file: fileName, text: contents
 }
+
+@NonCPS
+def isSonarVerificationEnabled()
+
+    return env.ENABLE_SONAR == "true";
+}
+
+@NonCPS
+def SonarHostUrl() {
+    return env.SonarHostUrl;
+}
+
+@NonCPS
+def ChangeId() {
+    return env.CHANGE_ID;
+}

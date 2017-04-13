@@ -36,8 +36,7 @@ def _writeFile(fileName, contents) {
 }
 
 @NonCPS
-def isSonarVerificationEnabled()
-
+def isSonarVerificationEnabled() {
     return env.ENABLE_SONAR == "true";
 }
 

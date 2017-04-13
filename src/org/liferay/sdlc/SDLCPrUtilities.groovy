@@ -83,23 +83,19 @@ class SDLCPrUtilities {
 		for (e in varMap) 
 			additionalCustomCommands = additionalCustomCommands.replace("#{"+e.key+"}", e.value);
 
-        log "Contents loaded. Will append"
-
         def file = new File(fileName);
         def value = '';
-        log "checking file $fileName exists"
         if (!file.exists()) {
             log "file $fileName not found"
             return;
         }    
-        log "file $fileName found"
         value = file.text;
-        log "file contents loaded"
-        log value
         value += '\n\n'+ additionalCustomCommands;
-        log "Contents to write"
+        log "Contents to write : "
         log value
+        log "--------------------"
         new File(fileName).write value
+        log "File $fileName written"
     }
 
 

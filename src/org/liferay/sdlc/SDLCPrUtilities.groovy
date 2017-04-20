@@ -14,16 +14,16 @@ class SDLCPrUtilities {
 
     // This method can't be "NonCPS"
     static def prInit(projectKey, projectName) {
-		def settingsGradle = _._readFile("settings.gradle")
-		if (!settingsGradle.contains("rootProject.name")) {
-			settingsGradle+="\nrootProject.name=\"$projectKey\"";
-			_._writeFile("settings.gradle", settingsGradle);
-		}
+        def settingsGradle = _._readFile("settings.gradle")
+        if (!settingsGradle.contains("rootProject.name")) {
+            settingsGradle+="\nrootProject.name=\"$projectKey\"";
+            _._writeFile("settings.gradle", settingsGradle);
+        }
 
-		appendAdditionalCommand("build.gradle", [
-			"_SONAR_PROJECT_NAME_" : projectName,
-			"_SONAR_PROJECT_KEY_"  : projectKey
-		]);
+        appendAdditionalCommand("build.gradle", [
+            "_SONAR_PROJECT_NAME_" : projectName,
+            "_SONAR_PROJECT_KEY_"  : projectKey
+        ]);
     
     }
 

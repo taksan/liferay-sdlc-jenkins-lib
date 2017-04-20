@@ -4,28 +4,31 @@ import java.util.Base64;
 import jenkins.model.*;
 import hudson.FilePath;
 
-static def fops = new FileOperations();
+
+def FileOperations() {
+        channel = null;
+}
 
 def createFilePath(path) {
-    if ("master".equals(NODE_NAME))
+    if ("master".equals(env.NODE_NAME))
         return new FilePath(File(path));
-    println build;
-    return new FilePath(build.workspace.getChannel(), path);
+
+    def channel = Jenkins.instance.getComputer(env.NODE_NAME).channel;
+    return new FilePath(channel, path);
 }
 
 def downloadTo(String urlFrom, toPath) {
-	createFilePath(toPath).copyFrom(new URL(urlFrom));
+    createFilePath(toPath).copyFrom(new URL(urlFrom));
 }
 
 def mkdir(path) {
-	createFilePath(bundle_artifact).mkdirs();
+    createFilePath(path).mkdirs();
 }
 
 def remove(path) {
-	createFilePath(path).delete();
+    createFilePath(path).delete();
 }
 
 def copyRecursive(from, to) {
-	createFilePath(from).copyRecursiveTo(bundle_artifact);
+    createFilePath(from).copyRecursiveTo(to);
 }
-

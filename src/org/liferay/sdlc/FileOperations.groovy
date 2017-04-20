@@ -18,7 +18,9 @@ def createFilePath(path) {
 }
 
 def downloadTo(String urlFrom, toPath) {
-    createFilePath(toPath).copyFrom(new URL(urlFrom));
+    FilePath fp = createFilePath(toPath);
+    fp.copyFrom(new URL(urlFrom));
+    return fp;
 }
 
 def mkdir(path) {

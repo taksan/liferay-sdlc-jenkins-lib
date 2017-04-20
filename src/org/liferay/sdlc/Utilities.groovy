@@ -2,8 +2,11 @@ package org.liferay.sdlc;
 
 def _gradlew(args)
 {
-    if (isUnix())
+    if (isUnix()) {
         sh "./gradlew " + args
+        if ("initBundle".equals(args))
+            sh 'chmod +x . $(find . -name catalina.sh)'
+    }
     else
         bat "gradlew " + args
 }

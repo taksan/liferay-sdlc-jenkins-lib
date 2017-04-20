@@ -34,3 +34,11 @@ def remove(path) {
 def copyRecursive(from, to) {
     createFilePath(from).copyRecursiveTo(to);
 }
+
+def unzip(zipFile, targetDir) {
+    zipFile.unzip(createFilePath(targetDir));
+}
+
+def zip(path, zipFileName) {
+    createFilePath(path).zip(createFilePath(zipFileName));
+}

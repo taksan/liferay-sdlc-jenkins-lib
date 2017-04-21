@@ -18,27 +18,33 @@ def createFilePath(path) {
 }
 
 def downloadTo(String urlFrom, toPath) {
+    println "downloadTo $urlFrom -> $toPath"
     FilePath fp = createFilePath(toPath);
     fp.copyFrom(new URL(urlFrom));
     return fp;
 }
 
 def mkdir(path) {
+    println "mkdir $path"
     createFilePath(path).mkdirs();
 }
 
 def remove(path) {
+    println "remove $path"
     createFilePath(path).delete();
 }
 
 def copyRecursive(from, to) {
+    println "copyRecursiveTo $from -> $to"
     createFilePath(from).copyRecursiveTo(createFilePath(to));
 }
 
 def unzip(zipFile, targetDir) {
+    println "unzip $zipFile -> $targetDir"
     zipFile.unzip(createFilePath(targetDir));
 }
 
 def zip(path, zipFileName) {
+    println "zip $path -> $zipFileName"
     createFilePath(path).zip(createFilePath(zipFileName));
 }

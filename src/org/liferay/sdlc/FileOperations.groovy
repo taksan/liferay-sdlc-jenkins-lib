@@ -32,7 +32,7 @@ def remove(path) {
 }
 
 def copyRecursive(from, to) {
-    createFilePath(from).copyRecursiveTo(to);
+    createFilePath(from).copyRecursiveTo(createFilePath(to));
 }
 
 def unzip(zipFile, targetDir) {

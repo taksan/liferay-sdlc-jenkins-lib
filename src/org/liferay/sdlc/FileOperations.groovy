@@ -10,6 +10,8 @@ def FileOperations() {
 }
 
 def createFilePath(path) {
+    if (!path.startsWith("/"))
+        path = "$workspace/$path";
     if ("master".equals(env.NODE_NAME))
         return new FilePath(File(path));
 

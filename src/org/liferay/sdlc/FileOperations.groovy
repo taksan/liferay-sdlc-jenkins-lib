@@ -4,11 +4,9 @@ import java.util.Base64;
 import jenkins.model.*;
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
+import hudson.remoting.VirtualChannel;
+import org.jenkinsci.remoting.RoleChecker;
 
-
-def FileOperations() {
-        channel = null;
-}
 
 def createFilePath(path) {
     if (!path.startsWith("/"))
@@ -42,18 +40,3 @@ def copyRecursive(from, to) {
     createFilePath(from).copyRecursiveTo(createFilePath(to));
 }
 
-def unzip(zipFile, targetDir) {
-    println "unzip $zipFile -> $targetDir"
-    zipFile.unzip(createFilePath(targetDir));
-}
-
-def zip(path, zipFileName) {
-    println "zip $path -> $zipFileName"
-    //createFilePath(path).zip(createFilePath(zipFileName));
-    workspace.act(new FileCallable<Void>() {
-        @Override public Void invoke(File f, VirtualChannel channel) {
-            zip archive: zipFileName, dir: path
-            return null;
-        }
-    });
-}

@@ -3,6 +3,7 @@ import java.net.URL;
 import java.util.Base64;
 import jenkins.model.*;
 import hudson.FilePath;
+import hudson.FilePath.FileCallable;
 
 
 def FileOperations() {
@@ -48,5 +49,11 @@ def unzip(zipFile, targetDir) {
 
 def zip(path, zipFileName) {
     println "zip $path -> $zipFileName"
-    createFilePath(path).zip(createFilePath(zipFileName));
+    //createFilePath(path).zip(createFilePath(zipFileName));
+    workspace.act(new FileCallable<Void>() {
+        @Override public Void invoke(File f, VirtualChannel channel) {
+            zip archive: zipFileName, dir: path
+            return null;
+        }
+    });
 }

@@ -50,3 +50,7 @@ def copyRecursive(from, to) {
     createFilePath(from).copyRecursiveTo(createFilePath(to));
 }
 
+def renameTo(from, to) {
+    println "renameTo $from to $to"
+    createFilePath(from).renameTo(createFilePath(to));
+}

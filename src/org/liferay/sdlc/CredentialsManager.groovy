@@ -47,6 +47,24 @@ def createSshPrivateKeyIfNeeded(credId, missingMessage, description)
             requestTimeout: 300,
             parameters: [
                 [$class: 'StringParameterDefinition', description: 'username', name: 'username'],
+                [$class: 'TextParameterDefinition', description: 'private key', name: 'privateKey']
+                ]
+        )
+        
+        createSshPrivateKey(credId, description, serverData['username'], serverData['privateKey'], "")
+    }
+}
+
+def createSshPrivateKeyWithPassprhaseIfNeeded(credId, missingMessage, description) 
+{
+    if (!credentialsExists(credId)) {
+        println missingMessage
+        def serverData = input(
+            id: 'serverData', 
+            message: 'Provide ssh credentials to access the server', 
+            requestTimeout: 300,
+            parameters: [
+                [$class: 'StringParameterDefinition', description: 'username', name: 'username'],
                 [$class: 'TextParameterDefinition', description: 'private key', name: 'privateKey'],
                 [$class: 'PasswordParameterDefinition', description: 'passphrase', name: 'passphrase']
                 ]

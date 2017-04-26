@@ -104,11 +104,19 @@ class SDLCPrUtilities {
         def args=""
         if (isPullRequest()) {
             println "Sonarqube Pull Request Evaluation"
-            args="-Dsonar.analysis.mode=preview -Dsonar.github.pullRequest=${_.ChangeId()} -Dsonar.github.oauth=${_.GithubOauth()} -Dsonar.github.repository=${gitRepository}"
+            try {
+                args="-Dsonar.analysis.mode=preview -Dsonar.github.pullRequest=${_.ChangeId()} -Dsonar.github.oauth=${_.GithubOauth()} -Dsonar.github.repository=${gitRepository}"
+            }catch(Exception e) {
+                if (!isFileExists("failureReasonFile")) throw e;
+                def reasonText = _._readFile("failureReasonFile").trim();
+                if (reasonText.matches(".*sonarqube:.*Unable to perform GitHub WS operation:")) {
+                    throw new Exception("Sonarqube Failed to access github repository to write sonarqube analysis.");
+                }
+            }
         }
         else {
             args=""
-        }    
+        }
         gradlew "sonarqube -Dsonar.buildbreaker.queryMaxAttempts=90 -Dsonar.buildbreaker.skip=true -Dsonar.host.url=${_.SonarHostUrl()} ${args}"
     }
 

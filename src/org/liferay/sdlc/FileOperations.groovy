@@ -1,3 +1,5 @@
+package org.liferay.sdlc;
+
 import java.io.File;
 import java.net.URL;
 import java.util.Base64;
@@ -12,7 +14,7 @@ def createFilePath(path) {
     if (!path.startsWith("/"))
         path = "$workspace/$path";
     if ("master".equals(env.NODE_NAME))
-        return new FilePath(File(path));
+        return new FilePath(new File(path));
 
     def channel = Jenkins.instance.getComputer(env.NODE_NAME).channel;
     return new FilePath(channel, path);
@@ -32,8 +34,16 @@ def mkdir(path) {
 
 def remove(path) {
     println "remove $path"
-    createFilePath(path).delete();
+    if (fileExists(path))
+        createFilePath(path).delete();
 }
+
+def removeRecursively(path) {
+    println "remove $path"
+    if (fileExists(path))
+        createFilePath(path).deleteRecursive();
+}
+
 
 def copyRecursive(from, to) {
     println "copyRecursiveTo $from -> $to"

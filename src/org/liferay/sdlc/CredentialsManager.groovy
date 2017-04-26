@@ -5,6 +5,7 @@ import com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey;
 import com.cloudbees.plugins.credentials.CredentialsScope;
 import com.cloudbees.plugins.credentials.SystemCredentialsProvider;
 import com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey.DirectEntryPrivateKeySource;
+import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl;
 
 def credentialsExists(credentialsId)
 {
@@ -20,9 +21,17 @@ def credentialsExists(credentialsId)
 
 def createSshPrivateKey(credentialsId, description, username, privateKey, passphrase)
 {
+    addToCredentialsDomain(new BasicSSHUserPrivateKey(CredentialsScope.GLOBAL, credentialsId, username, new DirectEntryPrivateKeySource(privateKey), passphrase, description))
+}
+
+def createUsernameWithPasswordCredentials(credentialsId, description, username, password)
+{
+    addToCredentialsDomain(new UsernamePasswordCredentialsImpl(CredentialsScope.GLOBAL, credentialsId, description, username, password))
+}
+
+def addToCredentialsDomain(credential) {
     d = SystemCredentialsProvider.instance.getDomainCredentials().domain.get(0);
-    c=new BasicSSHUserPrivateKey(CredentialsScope.GLOBAL, credentialsId, username, new DirectEntryPrivateKeySource(privateKey), passphrase, description)
-    SystemCredentialsProvider.getInstance().getStore().addCredentials(d, c)
+    SystemCredentialsProvider.getInstance().getStore().addCredentials(d, credential)
 }
 
 def getLoginFor(credentialsId)
@@ -36,6 +45,7 @@ def getLoginFor(credentialsId)
     }
     return null;
 }
+
 
 def createSshPrivateKeyIfNeeded(credId, missingMessage, description) 
 {

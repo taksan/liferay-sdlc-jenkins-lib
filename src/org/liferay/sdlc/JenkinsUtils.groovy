@@ -3,6 +3,7 @@ import jenkins.model.*;
 import hudson.plugins.sshslaves.SSHLauncher
 import hudson.slaves.DumbSlave
 import hudson.slaves.RetentionStrategy
+import hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy;
 import com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthorizationStrategy
 import static com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthorizationStrategy.PROJECT;
 
@@ -55,12 +56,16 @@ static def getJobParameterNames(jobName) {
 }
 
 static def createJenkinsSlave(name, description, hostname, privateKeyId) {
+    if (Jenkins.instance.getNode(name) != null) {
+        println "Node $name already exists"
+        return;
+    }
     DumbSlave slave = new DumbSlave(name, description, 
         "/home/jenkins/.jenkins",
         "5",
         Node.Mode.NORMAL,
         "",
-        new SSHLauncher(hostname, 22, privateKeyId,"","","",""),
+        new SSHLauncher(hostname, 22, privateKeyId,"","","","",null,null,null, new NonVerifyingKeyVerificationStrategy()),
         new RetentionStrategy.Always(),
         new LinkedList());
   

@@ -1,7 +1,10 @@
+import java.util.LinkedList;
 import jenkins.model.*;
+import hudson.plugins.sshslaves.SSHLauncher
+import hudson.slaves.DumbSlave
+import hudson.slaves.RetentionStrategy
 import com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthorizationStrategy
 import static com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthorizationStrategy.PROJECT;
-
 
 static def createProjectFromXML(jobName, jobXml)
 {
@@ -49,4 +52,17 @@ static def getJobParameterNames(jobName) {
         }
     }
 	return parametersNames;
+}
+
+static def createJenkinsSlave(name, description, hostname, privateKeyId) {
+    DumbSlave slave = new DumbSlave(name, description, 
+        "/home/jenkins/.jenkins",
+        "5",
+        Node.Mode.NORMAL,
+        "",
+        new SSHLauncher(hostname, 22, privateKeyId,"","","",""),
+        new RetentionStrategy.Always(),
+        new LinkedList());
+  
+    Jenkins.instance.addNode(slave);
 }

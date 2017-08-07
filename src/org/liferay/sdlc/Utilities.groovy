@@ -37,6 +37,16 @@ def _writeFile(fileName, contents) {
     writeFile file: fileName, text: contents
 }
 
+Map _getUserPassCredentials(String credentialsId) {
+    def credentials = null
+
+    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentialsId, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+        credentials = [username: env.USERNAME, password: env.PASSWORD]
+    }
+
+    return credentials
+}
+
 @NonCPS
 def isSonarVerificationEnabled() {
     return env.ENABLE_SONAR == "true";

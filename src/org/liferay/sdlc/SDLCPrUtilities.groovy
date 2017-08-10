@@ -101,11 +101,14 @@ class SDLCPrUtilities {
             return;
         }
 
-        def args=""
+        def credentials = _._getUserPassCredentials('sonar_analyser');
+        def args = "-Dsonar.login=${credentials.username} -Dsonar.password=${credentials.password}"
+
         if (isPullRequest()) {
             println "Sonarqube Pull Request Evaluation"
+
             try {
-                args="-Dsonar.analysis.mode=preview -Dsonar.github.pullRequest=${_.ChangeId()} -Dsonar.github.oauth=${_.GithubOauth()} -Dsonar.github.repository=${gitRepository}"
+                args += " -Dsonar.analysis.mode=preview -Dsonar.github.pullRequest=${_.ChangeId()} -Dsonar.github.oauth=${_.GithubOauth()} -Dsonar.github.repository=${gitRepository}"
             }catch(Exception e) {
                 if (!isFileExists("failureReasonFile")) throw e;
                 def reasonText = _._readFile("failureReasonFile").trim();
@@ -114,9 +117,7 @@ class SDLCPrUtilities {
                 }
             }
         }
-        else {
-            args=""
-        }
+
         gradlew "sonarqube -Dsonar.buildbreaker.queryMaxAttempts=90 -Dsonar.buildbreaker.skip=true -Dsonar.host.url=${_.SonarHostUrl()} ${args}"
     }
 

@@ -102,7 +102,7 @@ class SDLCPrUtilities {
         }
 
         def credentials = _._getUserPassCredentials('sonar_analyser');
-        def args = "-Dsonar.login=${credentials.username} -Dsonar.password=${credentials.password}"
+        def args = "-Dsonar.login=\"${credentials.username}\" -Dsonar.password=\"${credentials.password}\""
 
         if (isPullRequest()) {
             println "Sonarqube Pull Request Evaluation"
